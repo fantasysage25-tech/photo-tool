@@ -185,7 +185,7 @@
                 console.error("Error accessing camera: ", err);
                 let message = 'Could not access camera. Please upload a photo.';
                 if (err.name === "NotAllowedError" || err.name === "PermissionDeniedError") {
-                    message = 'Camera permission denied. Please check your browser settings (the lock icon in the address bar) and reload the page.';
+                    message = 'Camera permission denied. Please check your browser settings and allow camera access for this site, then reload the page.';
                 } else if (err.name === "NotFoundError" || err.name === "DevicesNotFoundError") {
                     message = 'No camera found on this device. Please try uploading a photo.';
                 }
@@ -378,4 +378,3 @@
     </script>
 </body>
 </html>
-
