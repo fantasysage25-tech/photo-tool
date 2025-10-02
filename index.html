@@ -366,19 +366,27 @@
             setTimeout(() => toast.classList.remove('show'), 4000);
         }
 
-        // --- CSV Export ---
+        // --- CSV Export (FIXED) ---
         exportCsvButton.addEventListener('click', () => {
             if (productData.length === 0) {
                 showToast("No data to export.");
                 return;
             }
-            let csvContent = "data:text/csv;charset=utf-8,Lot #,Description,Quantity\n";
+
+            const rows = [
+                ["Lot #", "Description", "Quantity"]
+            ];
+
             productData.forEach(item => {
-                const description = `"${item.description.replace(/"/g, '""').replace(/\n/g, ' ')}"`;
-                csvContent += [item.lot, description, item.quantity].join(",") + "\r\n";
+                const description = item.description.replace(/"/g, '""').replace(/\n/g, ' ');
+                rows.push([item.lot, `"${description}"`, item.quantity]);
             });
+
+            let csvContent = rows.map(row => row.join(",")).join("\n");
+            
+            const encodedUri = "data:text/csv;charset=utf-8," + encodeURIComponent(csvContent);
             const link = document.createElement("a");
-            link.setAttribute("href", encodeURI(csvContent));
+            link.setAttribute("href", encodedUri);
             link.setAttribute("download", "product_list.csv");
             document.body.appendChild(link);
             link.click();
