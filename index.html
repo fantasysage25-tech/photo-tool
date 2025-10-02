@@ -7,9 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-        body {
-            font-family: 'Inter', sans-serif;
-        }
+        body { font-family: 'Inter', sans-serif; }
         .loader {
             border: 4px solid #f3f3f3;
             border-top: 4px solid #3498db;
@@ -32,115 +30,108 @@
             border-radius: 8px;
             padding: 16px;
             position: fixed;
-            z-index: 10;
+            z-index: 50;
             left: 50%;
             bottom: 30px;
             opacity: 0;
             transition: opacity 0.3s, visibility 0.3s;
         }
-        .toast.show {
-            visibility: visible;
-            opacity: 1;
-        }
+        .toast.show { visibility: visible; opacity: 1; }
+        #settingsModal { transition: opacity 0.2s ease-in-out; }
     </style>
 </head>
 <body class="bg-gray-900 text-white antialiased">
     <div class="container mx-auto p-4 md:p-8 max-w-4xl">
-        <header class="text-center mb-8">
+        <header class="text-center mb-8 relative">
             <h1 class="text-3xl md:text-4xl font-bold text-white">Automatic Photo Description Tool</h1>
             <p class="text-gray-400 mt-2">Capture or upload a photo to generate a product description automatically.</p>
+            <button id="settingsButton" class="absolute top-0 right-0 p-2 text-gray-400 hover:text-white transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+            </button>
         </header>
 
-        <!-- Main Grid -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-            
-            <!-- Left Column: Input & Preview -->
             <div class="bg-gray-800 p-6 rounded-2xl shadow-lg flex flex-col gap-6">
-                <!-- Settings -->
-                <div>
-                    <h2 class="text-xl font-semibold mb-4 border-b border-gray-700 pb-2">1. Settings</h2>
-                    <div class="grid grid-cols-2 gap-4">
-                        <div>
-                            <label for="lotNumber" class="block text-sm font-medium text-gray-300 mb-1">Start Lot #</label>
-                            <input type="number" id="lotNumber" value="1001" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2.5 text-white focus:ring-blue-500 focus:border-blue-500">
-                        </div>
-                        <div>
-                            <label for="quantity" class="block text-sm font-medium text-gray-300 mb-1">Quantity</label>
-                            <input type="number" id="quantity" value="1" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2.5 text-white focus:ring-blue-500 focus:border-blue-500">
-                        </div>
+                <div id="settingsContainer">
+                    <h2 class="text-xl font-semibold mb-4 border-b border-gray-700 pb-2">1. Quick Setup</h2>
+                    <div id="apiKeyWarning" class="p-4 mb-4 text-sm text-yellow-300 bg-yellow-900 bg-opacity-50 rounded-lg" role="alert">
+                      <span class="font-medium">Action Required!</span> Please add your Google AI API key to enable the tool. Click the ⚙️ icon to open settings.
                     </div>
                 </div>
+                
+                <fieldset id="mainControls" disabled>
+                    <div>
+                        <h2 class="text-xl font-semibold mb-4 border-b border-gray-700 pb-2">1. Settings</h2>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label for="lotNumber" class="block text-sm font-medium text-gray-300 mb-1">Start Lot #</label>
+                                <input type="number" id="lotNumber" value="1001" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2.5 text-white focus:ring-blue-500 focus:border-blue-500">
+                            </div>
+                            <div>
+                                <label for="quantity" class="block text-sm font-medium text-gray-300 mb-1">Quantity</label>
+                                <input type="number" id="quantity" value="1" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2.5 text-white focus:ring-blue-500 focus:border-blue-500">
+                            </div>
+                        </div>
+                    </div>
 
-                <!-- Capture -->
-                <div id="captureContainer">
-                    <h2 class="text-xl font-semibold mb-4 border-b border-gray-700 pb-2">2. Capture Image</h2>
-                    <div class="bg-gray-700 rounded-lg overflow-hidden relative aspect-video flex items-center justify-center">
-                        <video id="video" autoplay playsinline class="w-full h-auto hidden"></video>
-                        <canvas id="canvas" class="hidden"></canvas>
-                        <div id="camera-status" class="text-gray-400 p-4 text-center">
-                            <p>Requesting camera access...</p>
+                    <div id="captureContainer">
+                        <h2 class="text-xl font-semibold mb-4 border-b border-gray-700 pb-2">2. Capture Image</h2>
+                        <div class="bg-gray-700 rounded-lg overflow-hidden relative aspect-video flex items-center justify-center">
+                            <video id="video" autoplay playsinline class="w-full h-auto hidden"></video>
+                            <canvas id="canvas" class="hidden"></canvas>
+                            <div id="camera-status" class="text-gray-400 p-4 text-center"><p>Requesting camera access...</p></div>
                         </div>
+                        <button id="snapButton" class="w-full mt-4 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg transition-colors disabled:bg-gray-500 disabled:cursor-not-allowed" disabled>Take Photo</button>
+                        <div class="relative text-center my-4">
+                            <div class="absolute inset-0 flex items-center"><div class="w-full border-t border-gray-600"></div></div>
+                            <div class="relative flex justify-center"><span class="bg-gray-800 px-2 text-sm text-gray-400">OR</span></div>
+                        </div>
+                        <label for="uploadInput" class="w-full text-center block cursor-pointer bg-gray-700 hover:bg-gray-600 text-white font-bold py-3 px-4 rounded-lg transition-colors">Upload a Photo</label>
                     </div>
-                    <button id="snapButton" class="w-full mt-4 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg transition-colors disabled:bg-gray-600" disabled>
-                        Take Photo
-                    </button>
-                    <div class="relative text-center my-4">
-                      <div class="absolute inset-0 flex items-center" aria-hidden="true">
-                        <div class="w-full border-t border-gray-600"></div>
-                      </div>
-                      <div class="relative flex justify-center">
-                        <span class="bg-gray-800 px-2 text-sm text-gray-400">OR</span>
-                      </div>
-                    </div>
-                    <label for="uploadInput" class="w-full text-center block cursor-pointer bg-gray-700 hover:bg-gray-600 text-white font-bold py-3 px-4 rounded-lg transition-colors">
-                        Upload a Photo
-                        <input type="file" id="uploadInput" accept="image/*" class="hidden">
-                    </label>
-                </div>
 
-                <!-- Preview and AI -->
-                <div id="previewContainer" class="hidden flex-col gap-4">
-                    <h2 class="text-xl font-semibold mb-2 border-b border-gray-700 pb-2">3. Review Description</h2>
-                    <img id="photoPreview" src="" alt="Captured photo" class="rounded-lg w-full h-auto">
-                    <div id="descriptionContainer" class="relative">
-                        <div id="loader" class="absolute inset-0 bg-gray-800 bg-opacity-80 flex items-center justify-center rounded-lg hidden">
-                            <div class="loader"></div>
+                    <div id="previewContainer" class="hidden flex-col gap-4">
+                        <h2 class="text-xl font-semibold mb-2 border-b border-gray-700 pb-2">3. Review Description</h2>
+                        <img id="photoPreview" src="" alt="Captured photo" class="rounded-lg w-full h-auto">
+                        <div id="descriptionContainer" class="relative">
+                            <div id="loader" class="absolute inset-0 bg-gray-800 bg-opacity-80 flex items-center justify-center rounded-lg hidden"><div class="loader"></div></div>
+                            <textarea id="descriptionText" rows="4" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2.5 text-white focus:ring-blue-500 focus:border-blue-500" placeholder="AI-generated description will appear here..."></textarea>
                         </div>
-                        <textarea id="descriptionText" rows="4" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2.5 text-white focus:ring-blue-500 focus:border-blue-500" placeholder="AI-generated description will appear here..."></textarea>
+                        <div class="grid grid-cols-2 gap-4">
+                            <button id="acceptButton" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-lg transition-colors">Accept & Add</button>
+                            <button id="retryButton" class="w-full bg-gray-600 hover:bg-gray-500 text-white font-bold py-3 px-4 rounded-lg transition-colors">Clear & Retry</button>
+                        </div>
                     </div>
-                    <div class="grid grid-cols-2 gap-4">
-                        <button id="acceptButton" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-lg transition-colors">Accept & Add</button>
-                        <button id="retryButton" class="w-full bg-gray-600 hover:bg-gray-500 text-white font-bold py-3 px-4 rounded-lg transition-colors">Clear & Retry</button>
-                    </div>
-                </div>
+                </fieldset>
             </div>
-
-            <!-- Right Column: Spreadsheet -->
             <div class="bg-gray-800 p-6 rounded-2xl shadow-lg flex flex-col">
-                <div class="flex justify-between items-center mb-4 border-b border-gray-700 pb-2">
+                 <div class="flex justify-between items-center mb-4 border-b border-gray-700 pb-2">
                     <h2 class="text-xl font-semibold">Product List</h2>
                     <button id="exportCsvButton" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-lg text-sm transition-colors">Export CSV</button>
                 </div>
                 <div class="flex-grow overflow-y-auto">
-                    <div class="overflow-x-auto">
-                        <table id="productTable" class="w-full text-sm text-left text-gray-300">
-                            <thead class="text-xs text-gray-400 uppercase bg-gray-700">
-                                <tr>
-                                    <th scope="col" class="px-6 py-3">Lot #</th>
-                                    <th scope="col" class="px-6 py-3">Description</th>
-                                    <th scope="col" class="px-6 py-3">Qty</th>
-                                    <th scope="col" class="px-6 py-3">Image</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <!-- Rows will be added dynamically -->
-                            </tbody>
-                        </table>
-                    </div>
+                    <table id="productTable" class="w-full text-sm text-left text-gray-300">
+                        <thead class="text-xs text-gray-400 uppercase bg-gray-700"><tr><th scope="col" class="px-6 py-3">Lot #</th><th scope="col" class="px-6 py-3">Description</th><th scope="col" class="px-6 py-3">Qty</th><th scope="col" class="px-6 py-3">Image</th></tr></thead>
+                        <tbody></tbody>
+                    </table>
                 </div>
             </div>
         </div>
         <div id="toast" class="toast"></div>
+    </div>
+    
+    <div id="settingsModal" class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center p-4 z-40 hidden opacity-0">
+        <div class="bg-gray-800 rounded-2xl p-6 shadow-xl w-full max-w-md">
+            <h2 class="text-2xl font-bold mb-4">Settings</h2>
+            <p class="text-gray-400 mb-4 text-sm">Your API key is saved only in your browser's local storage and is never sent anywhere except directly to Google's API.</p>
+            <div>
+                <label for="apiKeyInput" class="block text-sm font-medium text-gray-300 mb-1">Google AI API Key</label>
+                <input type="password" id="apiKeyInput" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2.5 text-white" placeholder="Paste your API key here">
+            </div>
+            <div class="mt-6 flex justify-end gap-4">
+                <button id="cancelSettingsButton" class="bg-gray-600 hover:bg-gray-500 text-white font-bold py-2 px-4 rounded-lg">Cancel</button>
+                <button id="saveSettingsButton" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg">Save Key</button>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -158,23 +149,77 @@
         const exportCsvButton = document.getElementById('exportCsvButton');
         const loader = document.getElementById('loader');
         const cameraStatus = document.getElementById('camera-status');
-
         const captureContainer = document.getElementById('captureContainer');
         const previewContainer = document.getElementById('previewContainer');
         const toast = document.getElementById('toast');
 
+        // New Settings Elements
+        const settingsButton = document.getElementById('settingsButton');
+        const settingsModal = document.getElementById('settingsModal');
+        const apiKeyInput = document.getElementById('apiKeyInput');
+        const saveSettingsButton = document.getElementById('saveSettingsButton');
+        const cancelSettingsButton = document.getElementById('cancelSettingsButton');
+        const mainControls = document.getElementById('mainControls');
+        const apiKeyWarning = document.getElementById('apiKeyWarning');
+        const settingsContainer = document.getElementById('settingsContainer');
+        
         let currentImageData = null;
         let productData = [];
+        let geminiApiKey = '';
+
+        // --- API Key & Settings Management ---
+        function loadApiKey() {
+            const storedKey = localStorage.getItem('geminiApiKey');
+            if (storedKey) {
+                geminiApiKey = storedKey;
+                apiKeyInput.value = storedKey;
+                mainControls.disabled = false;
+                settingsContainer.classList.add('hidden');
+            } else {
+                mainControls.disabled = true;
+                settingsContainer.classList.remove('hidden');
+            }
+        }
+
+        settingsButton.addEventListener('click', () => {
+            settingsModal.classList.remove('hidden');
+            setTimeout(() => settingsModal.classList.remove('opacity-0'), 10);
+        });
+
+        function closeSettingsModal() {
+            settingsModal.classList.add('opacity-0');
+            setTimeout(() => settingsModal.classList.add('hidden'), 200);
+        }
+
+        saveSettingsButton.addEventListener('click', () => {
+            const newKey = apiKeyInput.value.trim();
+            if (newKey) {
+                localStorage.setItem('geminiApiKey', newKey);
+                geminiApiKey = newKey;
+                mainControls.disabled = false;
+                settingsContainer.classList.add('hidden');
+                showToast("API Key saved successfully!");
+                closeSettingsModal();
+                // If camera wasn't started, start it now
+                if (!video.srcObject) {
+                    setupCamera();
+                }
+            } else {
+                showToast("Please enter a valid API key.");
+            }
+        });
+        
+        cancelSettingsButton.addEventListener('click', closeSettingsModal);
 
         // --- Camera and Image Handling ---
-
         async function setupCamera() {
+            // Only setup camera if we have an API key
+            if (!geminiApiKey) return;
+
             if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-                cameraStatus.innerHTML = 'Camera access is not supported by your browser. Please try uploading a photo.';
-                showToast("Your browser doesn't support camera access.", "error");
+                cameraStatus.innerHTML = '<p>Camera access is not supported by your browser.</p>';
                 return;
             }
-
             try {
                 const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
                 video.srcObject = stream;
@@ -182,15 +227,13 @@
                 cameraStatus.classList.add('hidden');
                 snapButton.disabled = false;
             } catch (err) {
-                console.error("Error accessing camera: ", err);
                 let message = 'Could not access camera. Please upload a photo.';
-                if (err.name === "NotAllowedError" || err.name === "PermissionDeniedError") {
-                    message = 'Camera permission denied. Please check your browser settings and allow camera access for this site, then reload the page.';
-                } else if (err.name === "NotFoundError" || err.name === "DevicesNotFoundError") {
-                    message = 'No camera found on this device. Please try uploading a photo.';
+                if (err.name === "NotAllowedError") {
+                    message = 'Camera permission denied. Please check your browser settings.';
+                } else if (err.name === "NotFoundError") {
+                    message = 'No camera found on this device.';
                 }
-                cameraStatus.innerHTML = message;
-                showToast(message);
+                cameraStatus.innerHTML = `<p>${message}</p>`;
             }
         }
 
@@ -198,17 +241,14 @@
             canvas.width = video.videoWidth;
             canvas.height = video.videoHeight;
             canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
-            const dataUrl = canvas.toDataURL('image/jpeg');
-            processImage(dataUrl);
+            processImage(canvas.toDataURL('image/jpeg'));
         });
 
-        uploadInput.addEventListener('change', (event) => {
-            const file = event.target.files[0];
+        uploadInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
             if (file) {
                 const reader = new FileReader();
-                reader.onload = (e) => {
-                    processImage(e.target.result);
-                };
+                reader.onload = (e) => processImage(e.target.result);
                 reader.readAsDataURL(file);
             }
         });
@@ -217,29 +257,27 @@
             currentImageData = imageData;
             photoPreview.src = imageData;
             switchToPreviewMode();
-            generateDescription(imageData.split(',')[1]); // Send base64 part
+            generateDescription(imageData.split(',')[1]);
         }
 
         // --- AI Description Generation ---
-
-        async function generateDescription(base64ImageData, retries = 3, delay = 1000) {
+        async function generateDescription(base64ImageData) {
+            if (!geminiApiKey) {
+                showToast("API Key is not set. Please add it in settings.");
+                return;
+            }
             loader.classList.remove('hidden');
             descriptionText.value = '';
             descriptionText.placeholder = "Generating description...";
 
-            const systemPrompt = "You are a product cataloging expert. Analyze the image and provide a concise, single-line product title followed by a brief, one or two-sentence description on a new line. Format it as: Title\nDescription.";
-            const userQuery = "Generate a title and description for the product in this image.";
-            const apiKey = ""; // API key is handled by the environment
-            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
-
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${geminiApiKey}`;
             const payload = {
                 contents: [{
                     parts: [
-                        { text: userQuery },
+                        { text: "Generate a concise, single-line product title followed by a brief, one or two-sentence description on a new line. Format it as: Title\nDescription." },
                         { inlineData: { mimeType: "image/jpeg", data: base64ImageData } }
                     ]
                 }],
-                systemInstruction: { parts: [{ text: systemPrompt }] },
             };
 
             try {
@@ -250,54 +288,36 @@
                 });
 
                 if (!response.ok) {
-                    const errorBody = await response.text();
-                    throw new Error(`API request failed with status ${response.status}: ${errorBody}`);
+                    const errorBody = await response.json();
+                    throw new Error(`API Error: ${errorBody.error.message}`);
                 }
-
                 const result = await response.json();
-                const candidate = result.candidates?.[0];
-
-                if (candidate && candidate.content?.parts?.[0]?.text) {
-                    descriptionText.value = candidate.content.parts[0].text.trim();
-                } else {
-                    throw new Error("Invalid API response structure.");
-                }
+                descriptionText.value = result.candidates[0].content.parts[0].text.trim();
             } catch (error) {
                 console.error("Error calling Gemini API:", error);
-                 if (retries > 0) {
-                    await new Promise(res => setTimeout(res, delay));
-                    return generateDescription(base64ImageData, retries - 1, delay * 2);
-                } else {
-                    descriptionText.placeholder = 'Failed to generate description. Please try again.';
-                    showToast('API Error. Please check console for details.');
-                }
+                descriptionText.placeholder = 'Failed to get description. Please try again.';
+                showToast(error.message || 'An unknown API error occurred.');
             } finally {
                 loader.classList.add('hidden');
             }
         }
 
         // --- UI and Data Management ---
-
         acceptButton.addEventListener('click', () => {
             const lot = lotNumberInput.value;
             const desc = descriptionText.value;
             const qty = quantityInput.value;
-
             if (!lot || !desc || !qty) {
-                showToast("Please ensure lot, description, and quantity are filled.");
+                showToast("Please ensure all fields are filled.");
                 return;
             }
-
             productData.push({ lot, description: desc, quantity: qty, imageData: currentImageData });
             renderTable();
-            
-            lotNumberInput.value = parseInt(lot) + 1; // Increment for next item
+            lotNumberInput.value = parseInt(lot) + 1;
             switchToCaptureMode();
         });
 
-        retryButton.addEventListener('click', () => {
-            switchToCaptureMode();
-        });
+        retryButton.addEventListener('click', switchToCaptureMode);
 
         function switchToPreviewMode() {
             captureContainer.classList.add('hidden');
@@ -312,8 +332,7 @@
             currentImageData = null;
             photoPreview.src = '';
             descriptionText.value = '';
-            descriptionText.placeholder = "AI-generated description will appear here...";
-            uploadInput.value = ''; // Reset file input
+            uploadInput.value = '';
         }
 
         function renderTable() {
@@ -321,15 +340,7 @@
             productData.forEach((item) => {
                 const row = document.createElement('tr');
                 row.className = 'bg-gray-800 border-b border-gray-700 hover:bg-gray-600';
-                
-                row.innerHTML = `
-                    <td class="px-6 py-4 font-medium text-white whitespace-nowrap">${item.lot}</td>
-                    <td class="px-6 py-4 whitespace-pre-wrap">${item.description}</td>
-                    <td class="px-6 py-4">${item.quantity}</td>
-                    <td class="px-6 py-4">
-                        <a href="${item.imageData}" download="${item.lot}.jpg" class="font-medium text-blue-500 hover:underline">Download</a>
-                    </td>
-                `;
+                row.innerHTML = `<td class="px-6 py-4 font-medium text-white">${item.lot}</td><td class="px-6 py-4 whitespace-pre-wrap">${item.description}</td><td class="px-6 py-4">${item.quantity}</td><td class="px-6 py-4"><a href="${item.imageData}" download="${item.lot}.jpg" class="font-medium text-blue-500 hover:underline">Download</a></td>`;
                 productTableBody.appendChild(row);
             });
         }
@@ -337,44 +348,37 @@
         function showToast(message) {
             toast.textContent = message;
             toast.classList.add('show');
-            setTimeout(() => {
-                toast.classList.remove('show');
-            }, 4000);
+            setTimeout(() => toast.classList.remove('show'), 4000);
         }
 
         // --- CSV Export ---
-
         exportCsvButton.addEventListener('click', () => {
             if (productData.length === 0) {
                 showToast("No data to export.");
                 return;
             }
-
-            let csvContent = "data:text/csv;charset=utf-8,";
-            csvContent += "Lot #,Description,Quantity\n";
-
+            let csvContent = "data:text/csv;charset=utf-8,Lot #,Description,Quantity\n";
             productData.forEach(item => {
                 const description = `"${item.description.replace(/"/g, '""').replace(/\n/g, ' ')}"`;
-                const row = [item.lot, description, item.quantity].join(",");
-                csvContent += row + "\r\n";
+                csvContent += [item.lot, description, item.quantity].join(",") + "\r\n";
             });
-
-            const encodedUri = encodeURI(csvContent);
             const link = document.createElement("a");
-            link.setAttribute("href", encodedUri);
+            link.setAttribute("href", encodeURI(csvContent));
             link.setAttribute("download", "product_list.csv");
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
         });
-
-        // --- Initialization ---
         
+        // --- Initialization ---
         window.onload = () => {
-            setupCamera();
+            loadApiKey();
+            if (geminiApiKey) {
+                setupCamera();
+            }
             switchToCaptureMode();
         };
-
     </script>
 </body>
 </html>
+
