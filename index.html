@@ -38,6 +38,14 @@
         }
         .toast.show { visibility: visible; opacity: 1; }
         #settingsModal { transition: opacity 0.2s ease-in-out; }
+        input:disabled, button:disabled {
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+        label.disabled {
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
     </style>
 </head>
 <body class="bg-gray-900 text-white antialiased">
@@ -53,55 +61,54 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div class="bg-gray-800 p-6 rounded-2xl shadow-lg flex flex-col gap-6">
                 <div id="settingsContainer">
-                    <h2 class="text-xl font-semibold mb-4 border-b border-gray-700 pb-2">1. Quick Setup</h2>
+                    <h2 class="text-xl font-semibold mb-4 border-b border-gray-700 pb-2">Quick Setup</h2>
                     <div id="apiKeyWarning" class="p-4 mb-4 text-sm text-yellow-300 bg-yellow-900 bg-opacity-50 rounded-lg" role="alert">
                       <span class="font-medium">Action Required!</span> Please add your Google AI API key to enable the tool. Click the ⚙️ icon to open settings.
                     </div>
                 </div>
                 
-                <fieldset id="mainControls" disabled>
-                    <div>
-                        <h2 class="text-xl font-semibold mb-4 border-b border-gray-700 pb-2">1. Settings</h2>
-                        <div class="grid grid-cols-2 gap-4">
-                            <div>
-                                <label for="lotNumber" class="block text-sm font-medium text-gray-300 mb-1">Start Lot #</label>
-                                <input type="number" id="lotNumber" value="1001" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2.5 text-white focus:ring-blue-500 focus:border-blue-500">
-                            </div>
-                            <div>
-                                <label for="quantity" class="block text-sm font-medium text-gray-300 mb-1">Quantity</label>
-                                <input type="number" id="quantity" value="1" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2.5 text-white focus:ring-blue-500 focus:border-blue-500">
-                            </div>
+                <div>
+                    <h2 class="text-xl font-semibold mb-4 border-b border-gray-700 pb-2">1. Settings</h2>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label for="lotNumber" class="block text-sm font-medium text-gray-300 mb-1">Start Lot #</label>
+                            <input type="number" id="lotNumber" value="1001" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2.5 text-white focus:ring-blue-500 focus:border-blue-500">
+                        </div>
+                        <div>
+                            <label for="quantity" class="block text-sm font-medium text-gray-300 mb-1">Quantity</label>
+                            <input type="number" id="quantity" value="1" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2.5 text-white focus:ring-blue-500 focus:border-blue-500">
                         </div>
                     </div>
+                </div>
 
-                    <div id="captureContainer">
-                        <h2 class="text-xl font-semibold mb-4 border-b border-gray-700 pb-2">2. Capture Image</h2>
-                        <div class="bg-gray-700 rounded-lg overflow-hidden relative aspect-video flex items-center justify-center">
-                            <video id="video" autoplay playsinline class="w-full h-auto hidden"></video>
-                            <canvas id="canvas" class="hidden"></canvas>
-                            <div id="camera-status" class="text-gray-400 p-4 text-center"><p>Requesting camera access...</p></div>
-                        </div>
-                        <button id="snapButton" class="w-full mt-4 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg transition-colors disabled:bg-gray-500 disabled:cursor-not-allowed" disabled>Take Photo</button>
-                        <div class="relative text-center my-4">
-                            <div class="absolute inset-0 flex items-center"><div class="w-full border-t border-gray-600"></div></div>
-                            <div class="relative flex justify-center"><span class="bg-gray-800 px-2 text-sm text-gray-400">OR</span></div>
-                        </div>
-                        <label for="uploadInput" class="w-full text-center block cursor-pointer bg-gray-700 hover:bg-gray-600 text-white font-bold py-3 px-4 rounded-lg transition-colors">Upload a Photo</label>
+                <div id="captureContainer">
+                    <h2 class="text-xl font-semibold mb-4 border-b border-gray-700 pb-2">2. Capture Image</h2>
+                    <div class="bg-gray-700 rounded-lg overflow-hidden relative aspect-video flex items-center justify-center">
+                        <video id="video" autoplay playsinline class="w-full h-auto hidden"></video>
+                        <canvas id="canvas" class="hidden"></canvas>
+                        <div id="camera-status" class="text-gray-400 p-4 text-center"><p>Requesting camera access...</p></div>
                     </div>
+                    <button id="snapButton" class="w-full mt-4 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg transition-colors">Take Photo</button>
+                    <div class="relative text-center my-4">
+                        <div class="absolute inset-0 flex items-center"><div class="w-full border-t border-gray-600"></div></div>
+                        <div class="relative flex justify-center"><span class="bg-gray-800 px-2 text-sm text-gray-400">OR</span></div>
+                    </div>
+                    <label id="uploadLabel" for="uploadInput" class="w-full text-center block cursor-pointer bg-gray-700 hover:bg-gray-600 text-white font-bold py-3 px-4 rounded-lg transition-colors">Upload a Photo</label>
+                    <input type="file" id="uploadInput" accept="image/*" class="hidden">
+                </div>
 
-                    <div id="previewContainer" class="hidden flex-col gap-4">
-                        <h2 class="text-xl font-semibold mb-2 border-b border-gray-700 pb-2">3. Review Description</h2>
-                        <img id="photoPreview" src="" alt="Captured photo" class="rounded-lg w-full h-auto">
-                        <div id="descriptionContainer" class="relative">
-                            <div id="loader" class="absolute inset-0 bg-gray-800 bg-opacity-80 flex items-center justify-center rounded-lg hidden"><div class="loader"></div></div>
-                            <textarea id="descriptionText" rows="4" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2.5 text-white focus:ring-blue-500 focus:border-blue-500" placeholder="AI-generated description will appear here..."></textarea>
-                        </div>
-                        <div class="grid grid-cols-2 gap-4">
-                            <button id="acceptButton" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-lg transition-colors">Accept & Add</button>
-                            <button id="retryButton" class="w-full bg-gray-600 hover:bg-gray-500 text-white font-bold py-3 px-4 rounded-lg transition-colors">Clear & Retry</button>
-                        </div>
+                <div id="previewContainer" class="hidden flex-col gap-4">
+                    <h2 class="text-xl font-semibold mb-2 border-b border-gray-700 pb-2">3. Review Description</h2>
+                    <img id="photoPreview" src="" alt="Captured photo" class="rounded-lg w-full h-auto">
+                    <div id="descriptionContainer" class="relative">
+                        <div id="loader" class="absolute inset-0 bg-gray-800 bg-opacity-80 flex items-center justify-center rounded-lg hidden"><div class="loader"></div></div>
+                        <textarea id="descriptionText" rows="4" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-2.5 text-white focus:ring-blue-500 focus:border-blue-500" placeholder="AI-generated description will appear here..."></textarea>
                     </div>
-                </fieldset>
+                    <div class="grid grid-cols-2 gap-4">
+                        <button id="acceptButton" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-lg transition-colors">Accept & Add</button>
+                        <button id="retryButton" class="w-full bg-gray-600 hover:bg-gray-500 text-white font-bold py-3 px-4 rounded-lg transition-colors">Clear & Retry</button>
+                    </div>
+                </div>
             </div>
             <div class="bg-gray-800 p-6 rounded-2xl shadow-lg flex flex-col">
                  <div class="flex justify-between items-center mb-4 border-b border-gray-700 pb-2">
@@ -135,10 +142,12 @@
     </div>
 
     <script>
+        // Getting all elements at the start
         const video = document.getElementById('video');
         const canvas = document.getElementById('canvas');
         const snapButton = document.getElementById('snapButton');
         const uploadInput = document.getElementById('uploadInput');
+        const uploadLabel = document.getElementById('uploadLabel');
         const photoPreview = document.getElementById('photoPreview');
         const descriptionText = document.getElementById('descriptionText');
         const acceptButton = document.getElementById('acceptButton');
@@ -152,20 +161,28 @@
         const captureContainer = document.getElementById('captureContainer');
         const previewContainer = document.getElementById('previewContainer');
         const toast = document.getElementById('toast');
-
-        // New Settings Elements
         const settingsButton = document.getElementById('settingsButton');
         const settingsModal = document.getElementById('settingsModal');
         const apiKeyInput = document.getElementById('apiKeyInput');
         const saveSettingsButton = document.getElementById('saveSettingsButton');
         const cancelSettingsButton = document.getElementById('cancelSettingsButton');
-        const mainControls = document.getElementById('mainControls');
-        const apiKeyWarning = document.getElementById('apiKeyWarning');
         const settingsContainer = document.getElementById('settingsContainer');
-        
+
         let currentImageData = null;
         let productData = [];
         let geminiApiKey = '';
+        
+        const controlsToToggle = [lotNumberInput, quantityInput, snapButton, uploadInput];
+
+        // --- App Enable/Disable Logic ---
+        function setControlsEnabled(isEnabled) {
+            controlsToToggle.forEach(control => control.disabled = !isEnabled);
+            if (isEnabled) {
+                uploadLabel.classList.remove('disabled');
+            } else {
+                uploadLabel.classList.add('disabled');
+            }
+        }
 
         // --- API Key & Settings Management ---
         function loadApiKey() {
@@ -173,10 +190,10 @@
             if (storedKey) {
                 geminiApiKey = storedKey;
                 apiKeyInput.value = storedKey;
-                mainControls.disabled = false;
+                setControlsEnabled(true);
                 settingsContainer.classList.add('hidden');
             } else {
-                mainControls.disabled = true;
+                setControlsEnabled(false);
                 settingsContainer.classList.remove('hidden');
             }
         }
@@ -196,11 +213,10 @@
             if (newKey) {
                 localStorage.setItem('geminiApiKey', newKey);
                 geminiApiKey = newKey;
-                mainControls.disabled = false;
+                setControlsEnabled(true);
                 settingsContainer.classList.add('hidden');
                 showToast("API Key saved successfully!");
                 closeSettingsModal();
-                // If camera wasn't started, start it now
                 if (!video.srcObject) {
                     setupCamera();
                 }
@@ -213,11 +229,10 @@
 
         // --- Camera and Image Handling ---
         async function setupCamera() {
-            // Only setup camera if we have an API key
             if (!geminiApiKey) return;
-
             if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-                cameraStatus.innerHTML = '<p>Camera access is not supported by your browser.</p>';
+                cameraStatus.innerHTML = '<p>Camera access not supported.</p>';
+                snapButton.disabled = true;
                 return;
             }
             try {
@@ -225,15 +240,12 @@
                 video.srcObject = stream;
                 video.classList.remove('hidden');
                 cameraStatus.classList.add('hidden');
-                snapButton.disabled = false;
             } catch (err) {
-                let message = 'Could not access camera. Please upload a photo.';
-                if (err.name === "NotAllowedError") {
-                    message = 'Camera permission denied. Please check your browser settings.';
-                } else if (err.name === "NotFoundError") {
-                    message = 'No camera found on this device.';
-                }
+                let message = 'Could not access camera.';
+                if (err.name === "NotAllowedError") message = 'Camera permission denied.';
+                else if (err.name === "NotFoundError") message = 'No camera found.';
                 cameraStatus.innerHTML = `<p>${message}</p>`;
+                snapButton.disabled = true;
             }
         }
 
@@ -245,11 +257,10 @@
         });
 
         uploadInput.addEventListener('change', (e) => {
-            const file = e.target.files[0];
-            if (file) {
+            if (e.target.files && e.target.files[0]) {
                 const reader = new FileReader();
-                reader.onload = (e) => processImage(e.target.result);
-                reader.readAsDataURL(file);
+                reader.onload = (ev) => processImage(ev.target.result);
+                reader.readAsDataURL(e.target.files[0]);
             }
         });
         
@@ -286,13 +297,17 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(payload)
                 });
-
                 if (!response.ok) {
                     const errorBody = await response.json();
                     throw new Error(`API Error: ${errorBody.error.message}`);
                 }
                 const result = await response.json();
-                descriptionText.value = result.candidates[0].content.parts[0].text.trim();
+                const text = result.candidates?.[0]?.content?.parts?.[0]?.text;
+                if (text) {
+                    descriptionText.value = text.trim();
+                } else {
+                     throw new Error('Received an empty description from the API.');
+                }
             } catch (error) {
                 console.error("Error calling Gemini API:", error);
                 descriptionText.placeholder = 'Failed to get description. Please try again.';
